@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-
+import { Reddit } from './Reddit';
 import styles from './styles';
 
 class Todo extends Component {
@@ -62,7 +62,7 @@ class Todo extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.h1}>Todo List</Text>
+        <Reddit />
         <View style={styles.form}>
           <TextInput
             style={styles.input}
