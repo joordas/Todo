@@ -36,4 +36,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('Main', () => Main);
+AppRegistry.registerComponent('Todo', () => Main);

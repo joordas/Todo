@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Reddit } from './Reddit';
+// import { Reddit } from './Reddit';
+import TodoForm from './TodoForm';
 import styles from './styles';
+import { connect } from 'react-redux';
+import { CREATE_TODO } from './reducers';
 
-class Todo extends Component {
+const mapActionsToProps = dispatch => ({
+  createTodo(todo) {
+    dispatch({ type: 'CREATE_TODO', payload: todo });
+  }
+});
+
+const mapStateToProps = state => ({
+  todos: state.todos
+});
+
+class _Todo extends Component {
   constructor() {
     super();
     this.state = {
-      todos: [],
       newTodo: ''
     };
-  }
-
-  componentWillMount() {
-    fetch('http://10.2.245.20:5000/todos', {
-      headers: {
-        Accept: 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(todos => this.setState({ todos }));
   }
 
   handleInputChange(text) {
@@ -27,65 +29,28 @@ class Todo extends Component {
       newTodo: text
     });
   }
-  addTodo() {
+  newTodo() {
     if (this.state.newTodo === '') {
       return;
     }
-    fetch('http://10.2.245.20:5000/todos', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: this.state.newTodo
-      })
-    })
-      .catch(error => console.log(error))
-      .then(res => res.json())
-      .then(todo => {
-        const todos = [todo, ...this.state.todos];
-        this.setState({ todos, newTodo: '' });
-      });
-    // const todos = [...this.state.todos, this.state.newTodo];
-    //
-  }
-  removeTodo(i) {
-    const todos = [
-      ...this.state.todos.slice(0, i),
-      ...this.state.todos.slice(i + 1)
-    ];
+    this.props.createTodo(this.state.newTodo);
     this.setState({
-      todos
+      newTodo: ''
     });
   }
+
   render() {
     return (
       <View style={styles.container}>
-        <Reddit />
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            value={this.state.newTodo}
-            onChangeText={this.handleInputChange.bind(this)}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={this.addTodo.bind(this)}
-          >
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
-        </View>
+        <TodoForm
+          handleInputChange={this.handleInputChange.bind(this)}
+          newTodo={this.newTodo.bind(this)}
+          value={this.state.newTodo}
+        />
         <View style={styles.todos}>
-          {this.state.todos.map((todo, i) => (
+          {this.props.todos.map((todo, i) => (
             <View key={i} style={styles.todo}>
-              <Text style={styles.todoText}>{todo.name}</Text>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => this.removeTodo.call(this, i)}
-              >
-                <Text>x</Text>
-              </TouchableOpacity>
+              <Text style={styles.todoText}>{todo}</Text>
             </View>
           ))}
         </View>
@@ -94,4 +59,4 @@ class Todo extends Component {
   }
 }
 
-export default Todo;
+export const Todo = connect(mapStateToProps, mapActionsToProps)(_Todo);

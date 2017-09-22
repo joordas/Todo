@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
-const vars = {
+export const vars = {
   blue: '#03A9F4',
   lightGrey: '#aaaaaa'
 };
@@ -57,11 +57,7 @@ const styles = StyleSheet.create({
   },
   todoText: {
     color: 'rgba(0, 0, 0, 0.6)',
-    fontSize: 22,
-    width: width * 0.8
-  },
-  deleteButton: {
-    width: width * 0.2
+    fontSize: 22
   }
 });
 
